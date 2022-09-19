@@ -1,7 +1,7 @@
 import argparse
 from bs4 import BeautifulSoup as BS
 from bs4 import Comment
-import urllib.request
+from urllib.request import Request, urlopen
 
 
 def comment_parser():
@@ -11,14 +11,14 @@ def comment_parser():
     args = parser.parse_args()
     URL = args.URL
 
+    # TODO remove these comments
     # URL that we're going to gather comments from
     # URL = input(f'Enter the webpage URL for which you want to extract comments: ')
     comment_container = []
 
-    # retrieve the page and store it for use with BS
-    webpage = urllib.request.urlopen(URL)
-    webpage_html = webpage.read()
-    webpage.close()
+    # retrieve the page and store it for use with BS, user agent spoofing to avoid some website security features
+    webpage_request = Request(url=URL, headers={'User-Agent': 'Mozilla/5.0'})
+    webpage_html = urlopen(webpage_request).read()
 
     # extract html using BS
     page_soup = BS(webpage_html, "html.parser")
