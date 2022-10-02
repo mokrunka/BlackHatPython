@@ -22,7 +22,7 @@ def handle_client(client_socket):
     with client_socket as sock:
         request = sock.recv(1024)
         # print out the message that the client sent
-        print(f'[*] Received: {request.decode("utf-8")}')
+        print(f'[*] Received: {request.decode("utf-8")}\n')
         # send the acknowledgement message
         sock.send(b'i acknowledge your test things')
 
