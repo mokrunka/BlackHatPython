@@ -6,6 +6,7 @@ import threading
 
 SUBNET = '192.168.10.0/24'
 MESSAGE = '^_^'
+hosts = []
 
 
 def udp_sender():
@@ -22,16 +23,29 @@ def packet_callback(packet):
     # print(packet.command())
     if packet[ICMP].type == 3 and packet[ICMP].code == 3:
         print(packet.command())
+        print(packet[IP].src)
 
 
-def main(target):
+def main(target_ip):
     while True:
         try:
             # filter
-            p_filter = f'dst {target} or src {target} and icmp'
-            sniff(filter=p_filter, prn=packet_callback, count=2)
+            p_filter = f'dst {target_ip} or src {target_ip} and icmp'
+            # pack is a list of packets
+            pack = sniff(filter=p_filter, prn=packet_callback, count=2)
+            for p in pack:
+                print(p.sniffed_on)
         except KeyboardInterrupt:
             break
+        finally:
+            host_discovery_list(pack)
+
+
+def host_discovery_list(pack):
+    for p in pack:
+        if p[IP].src not in hosts:
+            hosts.append(p[IP].src)
+    print(hosts)
 
 
 if __name__ == "__main__":
@@ -41,5 +55,4 @@ if __name__ == "__main__":
         target = '192.168.10.85'
     t = threading.Thread(target=udp_sender)
     t.start()
-    target = '192.168.10.85'
     main(target)
