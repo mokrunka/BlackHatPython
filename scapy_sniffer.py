@@ -1,6 +1,7 @@
+import ipaddress
+from ipaddress import *
 from scapy.all import *
 from scapy.layers.inet import IP, UDP, TCP, ICMP
-import ipaddress
 import threading
 
 
@@ -21,14 +22,13 @@ def udp_sender():
 def packet_callback(packet):
     # print(packet.show())
     # print(packet.summary())
+    # this prints the command that could be used to generate the response packets in scapy (for reference)
     # print(packet.command())
     # type 3 / code 3 means destination and port unreachable, but indicates a host is likely up
     if packet[ICMP].type == 3 and packet[ICMP].code == 3:
         if packet[IP].src not in HOSTS:
             HOSTS.append(packet[IP].src)
-    print(HOSTS)
-        # this prints the command that could be used to generate the response packets in scapy (for reference)
-        # print(packet.command())
+    print(f'Currently discovered hosts: {HOSTS}')
 
 
 def main(target_ip):
@@ -36,7 +36,7 @@ def main(target_ip):
         # filter
         p_filter = f'dst {target_ip} or src {target_ip} and icmp'
         # pack is a list of packets
-        pack = sniff(filter=p_filter, prn=packet_callback, count=2)
+        pack = sniff(filter=p_filter, prn=packet_callback, count=len(list(ip_network(SUBNET).hosts())))
         # for p in pack:
             # print(p.sniffed_on)
 
