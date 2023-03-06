@@ -3,6 +3,7 @@ from ipaddress import *
 from scapy.all import *
 from scapy.layers.inet import IP, UDP, TCP, ICMP
 import threading
+import os
 
 
 SUBNET = '192.168.10.0/24'
@@ -34,7 +35,7 @@ def packet_callback(packet):
 def main(target_ip):
     while True:
         # filter for packets we want to sniff (others will be ignored)
-        p_filter = f'dst {target_ip} or src {target_ip} and icmp'
+        p_filter = f'(dst {target_ip} or src {target_ip}) and icmp'
         # pack is a list of packets
         pack = sniff(filter=p_filter, prn=packet_callback, count=len(list(ip_network(SUBNET).hosts())))
         # for p in pack:
