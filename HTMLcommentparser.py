@@ -13,7 +13,7 @@ def comment_parser():
 
     # TODO remove these comments
     # URL that we're going to gather comments from
-    # URL = input(f'Enter the webpage URL for which you want to extract comments: ')
+    # URL = input(f'Enter the webpage URL from which you want to extract comments: ')
     comment_container = []
 
     # retrieve the page and store it for use with BS, user agent spoofing to avoid some website security features

@@ -44,6 +44,7 @@ def main(target_ip):
 
 if __name__ == "__main__":
     if len(sys.argv) == 2:
+        # note first arg is the filename itself
         target = sys.argv[1]
     else:
         target = '192.168.10.85'
